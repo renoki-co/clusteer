@@ -75,7 +75,6 @@ autostart=true
 autorestart=true
 killasgroup=true
 stopasgroup=true
-user=root
 numprocs=1
 redirect_stderr=true
 stdout_logfile=/dev/null
