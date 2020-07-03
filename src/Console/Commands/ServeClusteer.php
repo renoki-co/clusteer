@@ -20,6 +20,7 @@ class ServeClusteer extends Command
         {--chromium-path= : The path to the Chromium path.}
         {--node-path=$(which node) : The path to the node executable.}
         {--js-file-path=vendor/renoki-co/clusteer/server.js : The path for the JS file to run.}
+        {--show : Display the command that will run instead of running it}
     ';
 
     /**
@@ -61,6 +62,10 @@ class ServeClusteer extends Command
         $server = $server->jsFilePath($this->option('js-file-path'))
             ->nodeJsPath($this->option('node-path'))
             ->configureServer();
+
+        if ($this->option('show')) {
+            return $this->line($server->buildCommand());
+        }
 
         $process = $server->getProcess();
         $loop = $server->getLoop();
