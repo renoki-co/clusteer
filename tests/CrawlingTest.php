@@ -51,9 +51,9 @@ class CrawlingTest extends TestCase
             ->withHtml()
             ->get();
 
-            $this->assertTrue(
-                Str::contains($clusteer->getHtml(), 'Some-Kind-Of-Header')
-            );
+        $this->assertTrue(
+            Str::contains($clusteer->getHtml(), 'Some-Kind-Of-Header')
+        );
 
         $this->assertTrue(
             Str::contains($clusteer->getHtml(), 'Some-Kind-Of-Header-Value')

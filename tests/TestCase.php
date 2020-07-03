@@ -2,8 +2,8 @@
 
 namespace RenokiCo\Clusteer\Test;
 
-use RenokiCo\Clusteer\ClusteerServer;
 use Orchestra\Testbench\TestCase as Orchestra;
+use RenokiCo\Clusteer\ClusteerServer;
 use Symfony\Component\Process\Process;
 
 abstract class TestCase extends Orchestra

@@ -101,7 +101,7 @@ class Clusteer
      */
     public function blockExtensions(array $extensions)
     {
-        return $this->setParameter('blocked_extensions', join(',', $extensions));
+        return $this->setParameter('blocked_extensions', implode(',', $extensions));
     }
 
     /**
