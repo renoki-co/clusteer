@@ -1,0 +1,52 @@
+{
+    "name": "renoki-co/clusteer",
+    "description": "Clusteer helps you crawling webpages in a faster way, using a cluster of Chromium browsers under Puppeteer.",
+    "keywords": ["laravel", "php", "chromium", "chrome", "puppeteer", "crawling"],
+    "license": "MIT",
+    "homepage": "https://github.com/renoki-co/clusteer",
+    "authors": [
+        {
+            "name": "Alex Renoki",
+            "homepage": "https://github.com/rennokki",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "laravel/framework": "^6.2|^7.0",
+        "react/child-process": "^0.6.1",
+        "react/event-loop": "^1.1.1"
+    },
+    "suggest": {
+        "ext-pcntl": "Running the Clusteer Server needs pcntl to listen to command signals."
+    },
+    "autoload": {
+        "psr-4": {
+            "RenokiCo\\Clusteer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RenokiCo\\Clusteer\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.0",
+        "orchestra/database": "^5.0",
+        "symfony/process": "^4.2|^5.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RenokiCo\\Clusteer\\ClusteerServiceProvider"
+            ]
+        }
+    }
+}

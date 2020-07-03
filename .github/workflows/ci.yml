@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['7.2', '7.3', '7.4']
+        node: ['8', '10', '12']
+    name: PHP ${{ matrix.php }} with Node.js ${{ matrix.node }}
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install Chromium binary
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libnss3 chromium-browser
+
+    - name: Test Chromium binary
+      run: |
+        /usr/bin/chromium-browser --version
+
+    - uses: actions/setup-node@v2-beta
+      name: Install Node.js
+      with:
+        node-version: '${{ matrix.node }}'
+
+    - name: Test Node.js binary
+      run: |
+        node -v
+
+    - uses: actions/cache@v1
+      name: Cache Composer dependencies
+      with:
+        path: ~/.composer/cache/files
+        key: composer-php-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+
+    - uses: actions/cache@v1
+      name: Cache Node.js dependencies
+      with:
+        path: node_modules/
+        key: node-js-${{ matrix.node }}-${{ hashFiles('package.json') }}
+
+    - name: Install dependencies
+      run: |
+        composer install --no-interaction --prefer-source
+        npm install --only=prod
+
+    - name: Run tests
+      run: |
+        phpunit --coverage-text --coverage-clover=coverage.xml
+
+    - uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: false
