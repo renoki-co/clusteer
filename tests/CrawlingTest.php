@@ -37,9 +37,9 @@ class CrawlingTest extends TestCase
             ->withHtml()
             ->get();
 
-            $this->assertTrue(
-                Str::contains($clusteer->getHtml(), 'Some-Kind-Of-User-Agent')
-            );
+        $this->assertTrue(
+            Str::contains($clusteer->getHtml(), 'Some-Kind-Of-User-Agent')
+        );
     }
 
     public function test_extra_headers()
@@ -55,9 +55,9 @@ class CrawlingTest extends TestCase
                 Str::contains($clusteer->getHtml(), 'Some-Kind-Of-Header')
             );
 
-            $this->assertTrue(
-                Str::contains($clusteer->getHtml(), 'Some-Kind-Of-Header-Value')
-            );
+        $this->assertTrue(
+            Str::contains($clusteer->getHtml(), 'Some-Kind-Of-Header-Value')
+        );
     }
 
     public function test_block_extensions()
