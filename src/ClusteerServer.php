@@ -96,7 +96,8 @@ class ClusteerServer
     }
 
     /**
-     * Get the Clusteer server.
+     * Configure the Clusteer server's processes and
+     * loops to be ran later.
      *
      * @return $this
      */
@@ -127,12 +128,22 @@ class ClusteerServer
         return $this;
     }
 
-    public function getLoop()
+    /**
+     * Get the Loop factory.
+     *
+     * @return \React\EventLoop\Factory
+     */
+    public function getLoop(): ReactFactory
     {
         return $this->loop;
     }
 
-    public function getProcess()
+    /**
+     * Get the Process instance.
+     *
+     * @return \React\ChildProcess\Process
+     */
+    public function getProcess(): ReactProcess
     {
         return $this->process;
     }

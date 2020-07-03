@@ -56,6 +56,7 @@ abstract class TestCase extends Orchestra
         $command = ClusteerServer::create(8080)
             ->nodeJsPath('$(which node)')
             ->jsFilePath('server.js')
+            ->configureServer()
             ->buildCommand();
 
         $process = Process::fromShellCommandline($command)
