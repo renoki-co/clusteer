@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         php: ['7.2', '7.3', '7.4']
-        node: ['8', '10', '12']
+        node: ['10', '12']
     name: PHP ${{ matrix.php }} with Node.js ${{ matrix.node }}
     steps:
     - uses: actions/checkout@v1
