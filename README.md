@@ -9,7 +9,7 @@ Clusteer
 [![Monthly Downloads](https://poser.pugx.org/renoki-co/clusteer/d/monthly)](https://packagist.org/packages/renoki-co/clusteer)
 [![License](https://poser.pugx.org/renoki-co/clusteer/license)](https://packagist.org/packages/renoki-co/clusteer)
 
-Clusteer is a Puppeteer wrapper written for Laravel, with the super-power of parallelizing pages across same browser instances, thanks to [thomasdondorf/puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster).
+Clusteer is a Puppeteer wrapper written for Laravel, with the super-power of parallelizing pages across multiple browser instances, thanks to [thomasdondorf/puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster).
 
 This package got inspired from [spatie/browsershot](https://github.com/spatie/browsershot), taking into account the speed of rendering. Instead of opening multiple browsers for each page, Clusteer opens one page for each link, with a maximum amount of browsers you can define via a simple console command.
 
