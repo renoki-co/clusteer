@@ -8,13 +8,6 @@ use Symfony\Component\Process\Process;
 
 abstract class TestCase extends Orchestra
 {
-    /**
-     * Get the ClusteerServer instance.
-     *
-     * @var \RenokiCo\Clusteer\ClusteerServer
-     */
-    protected $server;
-
     protected function setUp(): void
     {
         parent::setUp();
