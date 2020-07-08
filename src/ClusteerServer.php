@@ -133,7 +133,7 @@ class ClusteerServer
      *
      * @return \React\EventLoop\Factory
      */
-    public function getLoop(): ReactFactory
+    public function getLoop()
     {
         return $this->loop;
     }
@@ -143,7 +143,7 @@ class ClusteerServer
      *
      * @return \React\ChildProcess\Process
      */
-    public function getProcess(): ReactProcess
+    public function getProcess()
     {
         return $this->process;
     }
