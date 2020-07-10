@@ -35,6 +35,7 @@ app.use('/healthcheck', require('express-healthcheck')());
 
   await cluster.task(async ({ page, data: query }) => {
     const triggeredRequests = [];
+    const consoleLines = [];
 
     // Set the viewport by default as 1920x1080
     await page.setViewport({
@@ -73,6 +74,17 @@ app.use('/healthcheck', require('express-healthcheck')());
 
     await page.setRequestInterception(true);
 
+    if (query.console_lines) {
+      page.on('console', line => {
+        consoleLines.push({
+          type: line.type(),
+          content: line.text(),
+          location: line.location(),
+        });
+      });
+    }
+
+
     page.on('request', request => {
       // Allow to block certain extensions.
       // For example: ?blocked_extensions=.png,.jpg
@@ -95,9 +107,17 @@ app.use('/healthcheck', require('express-healthcheck')());
         }
       }
 
-      triggeredRequests.push({
-        url: request.url(),
-      });
+      if (query.triggered_requests) {
+        triggeredRequests.push({
+          type: request.resourceType(),
+          method: request.method(),
+          url: request.url(),
+          headers: request.headers(),
+          post_data: request.postData() || '',
+          chain: request.redirectChain().map(req => req.url()),
+          from_navigation: request.isNavigationRequest(),
+        });
+      }
 
       return request.continue();
     });
@@ -107,13 +127,26 @@ app.use('/healthcheck', require('express-healthcheck')());
       timeout: query.timeout ? query.timeout * 1000 : options.defaultTimeout * 1000,
     });
 
-    const html = await page.evaluate(() => document.documentElement.innerHTML);
+    const screenshot = query.screenshot ? await (async function () {
+      return await page.screenshot({
+        type: 'jpeg',
+        quality: parseInt(query.quality || 75),
+        fullPage: true,
+        encoding: 'base64',
+      });
+    })() : null;
+
+    const html = query.html ? await page.evaluate(() => document.documentElement.innerHTML) : '';
+
+    const cookies = query.cookies ? (await page._client.send('Network.getAllCookies')).cookies : [];
 
     return {
       status: crawledPage.status(),
-      triggered_requests: query.triggered_requests ? triggeredRequests : [],
-      cookies: query.cookies ? (await page._client.send('Network.getAllCookies')).cookies : [],
-      html: query.html ? html : '',
+      triggered_requests: triggeredRequests,
+      console_lines: consoleLines,
+      cookies,
+      html,
+      screenshot,
     }
   });
 
@@ -124,13 +157,15 @@ app.use('/healthcheck', require('express-healthcheck')());
       return res.status(200).json({ data });
     } catch (err) {
       return res
-        .status(200)
+        .status(500)
         .json({
           data: {
             status: 500,
             triggered_requests: [],
+            console_lines: [],
             cookies: [],
             html: '',
+            screenshot: null,
           },
         });
     }

@@ -156,6 +156,28 @@ class Clusteer
     }
 
     /**
+     * Output the console lines.
+     *
+     * @return $this
+     */
+    public function withConsoleLines()
+    {
+        return $this->setParameter('console_lines', 1);
+    }
+
+    /**
+     * Output the screenshot.
+     *
+     * @param  int  $quality
+     * @return $this
+     */
+    public function withScreenshot(int $quality = 75)
+    {
+        return $this->setParameter('screenshot', 1)
+            ->setParameter('quality', $quality);
+    }
+
+    /**
      * Trigger the crawling.
      *
      * @return ClusteerResponse

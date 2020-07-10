@@ -61,6 +61,12 @@ jobs:
       run: |
         phpunit --coverage-text --coverage-clover=coverage.xml
 
+    - name: Upload math result for job 1
+      uses: actions/upload-artifact@v1
+      with:
+        name: screenshots
+        path: artifacts/screenshots
+
     - uses: codecov/codecov-action@v1
       with:
         fail_ci_if_error: false

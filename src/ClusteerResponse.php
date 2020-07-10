@@ -35,21 +35,21 @@ class ClusteerResponse
     /**
      * Get the list of triggered requests.
      *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
-    public function getTriggeredRequests(): array
+    public function getTriggeredRequests()
     {
-        return $this->response['triggered_requests'];
+        return collect($this->response['triggered_requests']);
     }
 
     /**
      * Get the list of cookies from the crawled page.
      *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
-    public function getCookies(): array
+    public function getCookies()
     {
-        return $this->response['cookies'];
+        return collect($this->response['cookies']);
     }
 
     /**
@@ -60,5 +60,28 @@ class ClusteerResponse
     public function getHtml(): string
     {
         return $this->response['html'];
+    }
+
+    /**
+     * Get the console lines triggered by the page.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getConsoleLines()
+    {
+        return collect($this->response['console_lines']);
+    }
+
+    /**
+     * Get the screenshot from the response.
+     *
+     * @param  bool  $decode
+     * @return mixed|null
+     */
+    public function getScreenshot(bool $decode = true)
+    {
+        $response = $this->response['screenshot'];
+
+        return $decode ? base64_decode($response) : $response;
     }
 }
