@@ -74,13 +74,16 @@ app.use('/healthcheck', require('express-healthcheck')());
 
     await page.setRequestInterception(true);
 
-    page.on('console', line => {
-      consoleLines.push({
-        type: line.type(),
-        content: line.text(),
-        location: line.location(),
+    if (query.console_lines) {
+      page.on('console', line => {
+        consoleLines.push({
+          type: line.type(),
+          content: line.text(),
+          location: line.location(),
+        });
       });
-    });
+    }
+
 
     page.on('request', request => {
       // Allow to block certain extensions.
@@ -104,15 +107,17 @@ app.use('/healthcheck', require('express-healthcheck')());
         }
       }
 
-      triggeredRequests.push({
-        type: request.resourceType(),
-        method: request.method(),
-        url: request.url(),
-        headers: request.headers(),
-        post_data: request.postData() || '',
-        chain: request.redirectChain().map(req => req.url()),
-        from_navigation: request.isNavigationRequest(),
-      });
+      if (query.triggered_requests) {
+        triggeredRequests.push({
+          type: request.resourceType(),
+          method: request.method(),
+          url: request.url(),
+          headers: request.headers(),
+          post_data: request.postData() || '',
+          chain: request.redirectChain().map(req => req.url()),
+          from_navigation: request.isNavigationRequest(),
+        });
+      }
 
       return request.continue();
     });
@@ -122,14 +127,16 @@ app.use('/healthcheck', require('express-healthcheck')());
       timeout: query.timeout ? query.timeout * 1000 : options.defaultTimeout * 1000,
     });
 
-    const html = await page.evaluate(() => document.documentElement.innerHTML);
+    const html = query.html ? await page.evaluate(() => document.documentElement.innerHTML) : '';
+
+    const cookies = query.cookies ? (await page._client.send('Network.getAllCookies')).cookies : [];
 
     return {
       status: crawledPage.status(),
-      triggered_requests: query.triggered_requests ? triggeredRequests : [],
-      console_lines: query.console_lines ? consoleLines : [],
-      cookies: query.cookies ? (await page._client.send('Network.getAllCookies')).cookies : [],
-      html: query.html ? html : '',
+      triggered_requests: triggeredRequests,
+      console_lines: consoleLines,
+      cookies,
+      html,
     }
   });
 
