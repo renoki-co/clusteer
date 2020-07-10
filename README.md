@@ -137,6 +137,17 @@ $clusteer = Clusteer::to('https://example.com')
 $clusteer->getCookies();
 ```
 
+Debugging the console line can be done with `withConsoleLines()`:
+
+```php
+$clusteer = Clusteer::to('https://example.com')
+    ->waitUntilAllRequestsFinish()
+    ->withConsoleLines()
+    ->get();
+
+$clusteer->getConsoleLines();
+```
+
 ## 🐛 Testing
 
 ``` bash

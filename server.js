@@ -35,6 +35,7 @@ app.use('/healthcheck', require('express-healthcheck')());
 
   await cluster.task(async ({ page, data: query }) => {
     const triggeredRequests = [];
+    const consoleLines = [];
 
     // Set the viewport by default as 1920x1080
     await page.setViewport({
@@ -72,6 +73,14 @@ app.use('/healthcheck', require('express-healthcheck')());
     }
 
     await page.setRequestInterception(true);
+
+    page.on('console', line => {
+      consoleLines.push({
+        type: line.type(),
+        content: line.text(),
+        location: line.location(),
+      });
+    });
 
     page.on('request', request => {
       // Allow to block certain extensions.
@@ -112,6 +121,7 @@ app.use('/healthcheck', require('express-healthcheck')());
     return {
       status: crawledPage.status(),
       triggered_requests: query.triggered_requests ? triggeredRequests : [],
+      console_lines: query.console_lines ? consoleLines : [],
       cookies: query.cookies ? (await page._client.send('Network.getAllCookies')).cookies : [],
       html: query.html ? html : '',
     }
@@ -129,6 +139,7 @@ app.use('/healthcheck', require('express-healthcheck')());
           data: {
             status: 500,
             triggered_requests: [],
+            console_lines: [],
             cookies: [],
             html: '',
           },

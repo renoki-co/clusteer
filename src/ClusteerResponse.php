@@ -61,4 +61,14 @@ class ClusteerResponse
     {
         return $this->response['html'];
     }
+
+    /**
+     * Get the console lines triggered by the page.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getConsoleLines()
+    {
+        return collect($this->response['console_lines']);
+    }
 }

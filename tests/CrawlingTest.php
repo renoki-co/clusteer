@@ -86,4 +86,16 @@ class CrawlingTest extends TestCase
             count($clusteer->getCookies()) > 0
         );
     }
+
+    public function test_console_lines()
+    {
+        $clusteer = Clusteer::to('https://facebook.com')
+            ->waitUntilAllRequestsFinish()
+            ->withConsoleLines()
+            ->get();
+
+        $this->assertTrue(
+            count($clusteer->getConsoleLines()) > 0
+        );
+    }
 }

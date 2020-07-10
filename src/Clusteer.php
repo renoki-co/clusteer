@@ -156,6 +156,16 @@ class Clusteer
     }
 
     /**
+     * Output the console lines.
+     *
+     * @return $this
+     */
+    public function withConsoleLines()
+    {
+        return $this->setParameter('console_lines', 1);
+    }
+
+    /**
      * Trigger the crawling.
      *
      * @return ClusteerResponse
