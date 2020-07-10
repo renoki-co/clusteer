@@ -35,21 +35,21 @@ class ClusteerResponse
     /**
      * Get the list of triggered requests.
      *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
-    public function getTriggeredRequests(): array
+    public function getTriggeredRequests()
     {
-        return $this->response['triggered_requests'];
+        return collect($this->response['triggered_requests']);
     }
 
     /**
      * Get the list of cookies from the crawled page.
      *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
-    public function getCookies(): array
+    public function getCookies()
     {
-        return $this->response['cookies'];
+        return collect($this->response['cookies']);
     }
 
     /**
