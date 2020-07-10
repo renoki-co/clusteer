@@ -105,7 +105,13 @@ app.use('/healthcheck', require('express-healthcheck')());
       }
 
       triggeredRequests.push({
+        type: request.resourceType(),
+        method: request.method(),
         url: request.url(),
+        headers: request.headers(),
+        post_data: request.postData() || '',
+        chain: request.redirectChain().map(req => req.url()),
+        from_navigation: request.isNavigationRequest(),
       });
 
       return request.continue();
