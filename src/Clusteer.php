@@ -166,6 +166,18 @@ class Clusteer
     }
 
     /**
+     * Output the screenshot.
+     *
+     * @param  int  $quality
+     * @return $this
+     */
+    public function withScreenshot(int $quality = 75)
+    {
+        return $this->setParameter('screenshot', 1)
+            ->setParameter('quality', $quality);
+    }
+
+    /**
      * Trigger the crawling.
      *
      * @return ClusteerResponse

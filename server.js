@@ -127,6 +127,15 @@ app.use('/healthcheck', require('express-healthcheck')());
       timeout: query.timeout ? query.timeout * 1000 : options.defaultTimeout * 1000,
     });
 
+    const screenshot = query.screenshot ? await (async function () {
+      return await page.screenshot({
+        type: 'jpeg',
+        quality: parseInt(query.quality || 75),
+        fullPage: true,
+        encoding: 'base64',
+      });
+    })() : null;
+
     const html = query.html ? await page.evaluate(() => document.documentElement.innerHTML) : '';
 
     const cookies = query.cookies ? (await page._client.send('Network.getAllCookies')).cookies : [];
@@ -137,6 +146,7 @@ app.use('/healthcheck', require('express-healthcheck')());
       console_lines: consoleLines,
       cookies,
       html,
+      screenshot,
     }
   });
 
@@ -147,7 +157,7 @@ app.use('/healthcheck', require('express-healthcheck')());
       return res.status(200).json({ data });
     } catch (err) {
       return res
-        .status(200)
+        .status(500)
         .json({
           data: {
             status: 500,
@@ -155,6 +165,7 @@ app.use('/healthcheck', require('express-healthcheck')());
             console_lines: [],
             cookies: [],
             html: '',
+            screenshot: null,
           },
         });
     }

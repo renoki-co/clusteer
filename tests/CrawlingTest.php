@@ -98,4 +98,18 @@ class CrawlingTest extends TestCase
             count($clusteer->getConsoleLines()) > 0
         );
     }
+
+    public function test_screenshot()
+    {
+        $clusteer = Clusteer::to('https://google.ro')
+            ->waitUntilAllRequestsFinish()
+            ->withScreenshot()
+            ->get();
+
+        $this->assertNotNull(
+            $content = $clusteer->getScreenshot()
+        );
+
+        file_put_contents('artifacts/test_screenshot.jpeg', $content);
+    }
 }

@@ -71,4 +71,17 @@ class ClusteerResponse
     {
         return collect($this->response['console_lines']);
     }
+
+    /**
+     * Get the screenshot from the response.
+     *
+     * @param  bool  $decode
+     * @return mixed|null
+     */
+    public function getScreenshot(bool $decode = true)
+    {
+        $response = $this->response['screenshot'];
+
+        return $decode ? base64_decode($response) : $response;
+    }
 }
