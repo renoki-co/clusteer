@@ -8,18 +8,44 @@ use Symfony\Component\Process\Process;
 
 abstract class TestCase extends Orchestra
 {
+    /**
+     * The Clusteer server process.
+     *
+     * @var \Symfony\Component\Process\Process
+     */
+    protected $server;
+
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->startServer();
+        $command = ClusteerServer::create(8080)
+            ->nodeJsPath('$(which node)')
+            ->jsFilePath('server.js')
+            ->configureServer()
+            ->buildCommand();
+
+        $this->server = Process::fromShellCommandline($command)
+            ->setTimeout(600);
+
+        $this->server->start();
+
+        sleep(2);
     }
 
     /**
-     * Get the package providers.
-     *
-     * @param  mixed  $app
-     * @return array
+     * {@inheritdoc}
+     */
+    protected function tearDown(): void
+    {
+        $this->server->stop();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function getPackageProviders($app)
     {
@@ -29,34 +55,10 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * Set up the environment.
-     *
-     * @param  mixed  $app
-     * @return void
+     * {@inheritdoc}
      */
     public function getEnvironmentSetUp($app)
     {
         $app['config']->set('app.key', 'wslxrEFGWY6GfGhvN9L3wH3KSRJQQpBD');
-    }
-
-    /**
-     * Start the node server in the background.
-     *
-     * @return void
-     */
-    protected function startServer(): void
-    {
-        $command = ClusteerServer::create(8080)
-            ->nodeJsPath('$(which node)')
-            ->jsFilePath('server.js')
-            ->configureServer()
-            ->buildCommand();
-
-        $process = Process::fromShellCommandline($command)
-            ->setTimeout(600);
-
-        $process->start();
-
-        sleep(5);
     }
 }
