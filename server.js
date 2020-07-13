@@ -157,7 +157,7 @@ app.use('/healthcheck', require('express-healthcheck')());
       return res.status(200).json({ data });
     } catch (err) {
       return res
-        .status(500)
+        .status(200)
         .json({
           data: {
             status: 500,
