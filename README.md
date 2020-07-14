@@ -40,6 +40,28 @@ $response = Clusteer::to('https://laravel.com')
 $html = $response->getHtml();
 ```
 
+## Benchmarks
+
+You may now ask - is it faster than traditional methods that create one browser for each page?
+
+Benchmarks speak for themselves. Below you will find a benchmark that was made on an app that uses a traditional method like [spatie/browsershot](https://github.com/spatie/browsershot) to analyse links, compared to the one used by Clusteer.
+
+### Browsershot
+
+With Browsershot, the CPU usage skyrockets to 99%. AWS forces autoscaling and gets a total of 6 x `m5.large` instances to 99%. There were analysed 100 links every 1 hour. There are only 3 concurrent jobs that process them in parallel. At the end of the benchmark, the analysis was stopped because the CPU usage couldn't get down from 99%.
+
+![Browsershot](benchmarks/1.png "Browsershot")
+
+### Clusteer
+
+With Clusteer, the CPU keeps below 40%. More than that, it was set up to analyse 1000 links every 1 hour, with 3 max opened browsers on 3 concurrent jobs that process them in parallel. In this case, there were only 4 x `m5.large` instances, and they all keep below 40%.
+
+You can see clearly - fewer servers, fewer CPU usage, more analysed links and there is still plenty of room to compute more than this since there is still gap between hours (from :25 to :55 for example)
+
+The advantage here is that there are 3 opened browsers that wait for tasks, so there are no more start-up delays when opening a new browser - only new incognito pages/tabs are created and destroyed after each request.
+
+![Browsershot](benchmarks/2.png "Browsershot")
+
 ## Prerequisites for Server
 
 You will need to have a few node packages installed before diving in.
