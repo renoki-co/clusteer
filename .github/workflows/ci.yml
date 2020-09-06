@@ -13,12 +13,25 @@ on:
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
+
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         php: ['7.2', '7.3', '7.4']
         node: ['10', '12']
-    name: PHP ${{ matrix.php }} with Node.js ${{ matrix.node }}
+        laravel: ['6.*', '7.*', '8.*']
+        prefer: ['prefer-lowest', 'prefer-stable']
+        include:
+          - laravel: '6.*'
+            testbench: '4.*'
+          - laravel: '7.*'
+            testbench: '5.*'
+          - laravel: '8.*'
+            testbench: '6.*'
+
+    name: PHP ${{ matrix.php }} - Node ${{ matrix.node }} - Laravel ${{ matrix.laravel }} --${{ matrix.prefer }}
+
     steps:
     - uses: actions/checkout@v1
 
@@ -44,7 +57,7 @@ jobs:
       name: Cache Composer dependencies
       with:
         path: ~/.composer/cache/files
-        key: composer-php-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+        key: composer-php-${{ matrix.php }}-${{ matrix.laravel }}-${{ matrix.prefer }}-${{ hashFiles('composer.json') }}
 
     - uses: actions/cache@v1
       name: Cache Node.js dependencies
@@ -54,7 +67,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        composer install --no-interaction --prefer-source
+        composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+        composer update --${{ matrix.prefer }} --prefer-dist --no-interaction --no-suggest
         npm install --only=prod
 
     - name: Run tests
