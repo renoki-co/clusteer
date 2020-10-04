@@ -2,8 +2,14 @@
 
 namespace RenokiCo\Clusteer;
 
+use RenokiCo\Clusteer\Contracts\Actionable;
+
 class Clusteer
 {
+    use Concerns\HasClickActions;
+    use Concerns\HasKeyboardActions;
+    use Concerns\HasTimeActions;
+
     const DESKTOP_DEVICE = 'desktop';
 
     const TABLET_DEVICE = 'tablet';
@@ -23,6 +29,13 @@ class Clusteer
      * @var string
      */
     protected $url;
+
+    /**
+     * The list actions to perform within the script run.
+     *
+     * @var array
+     */
+    protected $actions = [];
 
     /**
      * Initialize a Clusteer instance with an URL.
@@ -206,6 +219,31 @@ class Clusteer
     }
 
     /**
+     * Add a new action to the queue.
+     *
+     * @param  \RenokiCo\Clusteer\Contracts\Actionable  $action
+     * @return $this
+     */
+    public function action(Actionable $action)
+    {
+        $this->actions[] = $action;
+
+        return $this;
+    }
+
+    /**
+     * GEt the actions as JSON.
+     *
+     * @return string
+     */
+    public function getActionsAsJson()
+    {
+        return collect($this->actions)->map(function ($action) {
+            return $action->format();
+        })->toJson();
+    }
+
+    /**
      * Get the callable URL.
      *
      * @return string
@@ -214,6 +252,9 @@ class Clusteer
     {
         // Ensure url is at the end of the query string.
         $this->setParameter('url', $this->url);
+
+        // Add the actions to the query.
+        $this->setParameter('actions', $this->getActionsAsJson());
 
         $endpoint = config('clusteer.endpoint');
         $query = http_build_query($this->query);

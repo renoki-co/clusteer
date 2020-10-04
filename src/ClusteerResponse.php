@@ -84,4 +84,14 @@ class ClusteerResponse
 
         return $decode ? base64_decode($response) : $response;
     }
+
+    /**
+     * Get the actions that were retrieved by the server.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getActions()
+    {
+        return collect($this->response['actions']);
+    }
 }

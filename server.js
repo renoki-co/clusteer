@@ -36,6 +36,7 @@ app.use('/healthcheck', require('express-healthcheck')());
   await cluster.task(async ({ page, data: query }) => {
     const triggeredRequests = [];
     const consoleLines = [];
+    const actions = JSON.parse(query.actions || null);
 
     // Set the viewport by default as 1920x1080
     await page.setViewport({
@@ -127,6 +128,48 @@ app.use('/healthcheck', require('express-healthcheck')());
       timeout: query.timeout ? query.timeout * 1000 : options.defaultTimeout * 1000,
     });
 
+    // The .reduce() function is used as a workaround to
+    // make sure that each step gets called in right order and
+    // is waited for it. Please see the following post on SO:
+    // https://stackoverflow.com/a/49499491/3704404
+
+    await actions.reduce(async (promise, action) => {
+      await promise;
+
+      if (action.name === 'click') {
+        await page.click(action.selector, {
+          clickCount: action.amount,
+          delay: 100,
+          button: action.button,
+        });
+      }
+
+      if (action.name === 'type') {
+        await page.type(action.selector, action.text, {
+          delay: action.delay,
+        });
+      }
+
+      if (action.name === 'down') {
+        await page.keyboard.down(action.text);
+      }
+
+      if (action.name === 'up') {
+        await page.keyboard.up(action.text);
+      }
+
+      if (action.name === 'press') {
+        await page.keyboard.press(action.text, {
+          delay: action.delay,
+        });
+      }
+
+      if (action.name === 'wait') {
+        await page.waitForTimeout(action.seconds * 1000);
+      }
+    }, Promise.resolve());
+
+
     const screenshot = query.screenshot ? await (async function () {
       return await page.screenshot({
         type: 'jpeg',
@@ -147,6 +190,7 @@ app.use('/healthcheck', require('express-healthcheck')());
       cookies,
       html,
       screenshot,
+      actions,
     }
   });
 
@@ -166,6 +210,7 @@ app.use('/healthcheck', require('express-healthcheck')());
             cookies: [],
             html: '',
             screenshot: null,
+            actions: [],
           },
         });
     }
