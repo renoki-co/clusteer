@@ -2,7 +2,7 @@
     "name": "renoki-co/clusteer",
     "description": "Clusteer helps you crawling webpages in a faster way, using a cluster of Chromium browsers under Puppeteer.",
     "keywords": ["laravel", "php", "chromium", "chrome", "puppeteer", "crawling"],
-    "license": "MIT",
+    "license": "Apache-2.0",
     "homepage": "https://github.com/renoki-co/clusteer",
     "authors": [
         {
