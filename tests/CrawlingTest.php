@@ -95,7 +95,7 @@ class CrawlingTest extends TestCase
             ->get();
 
         $this->assertTrue(
-            count($clusteer->getConsoleLines()) > 0
+            is_array($clusteer->getConsoleLines()->toArray())
         );
     }
 
