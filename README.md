@@ -67,7 +67,13 @@ The advantage here is that there are 3 opened browsers that wait for tasks, so t
 You will need to have a few node packages installed before diving in.
 
 ```bash
-$ npm install --save dotenv express express-healthcheck puppeteer puppeteer-cluster random-user-agent
+$ npm install --save \
+    dotenv@^8.2.0 \
+    express@^4.17.1 \
+    express-healthcheck@^0.1.0 \
+    puppeteer@^5.4.1 \
+    puppeteer-cluster@^0.21.0 \
+    random-user-agent@^1.0.0
 ```
 
 The server relies on Chromium, so you can find some pretty neat and simple way of getting your Chrome binary file, like [staudenmeir/dusk-updater](https://github.com/staudenmeir/dusk-updater).
