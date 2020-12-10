@@ -21,9 +21,11 @@ class ClusteerServiceProvider extends ServiceProvider
             __DIR__.'/../config/clusteer.php', 'clusteer'
         );
 
-        $this->commands([
-            Console\Commands\ServeClusteer::class,
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Console\Commands\ServeClusteer::class,
+            ]);
+        }
     }
 
     /**
