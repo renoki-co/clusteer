@@ -170,7 +170,7 @@ class ClusteerServer
                     return false;
                 }
 
-                $value = addslashes($value);
+                $value = escapeshellarg($value);
 
                 return "{$key}=\"{$value}\"";
             })
