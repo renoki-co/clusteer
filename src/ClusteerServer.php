@@ -172,7 +172,7 @@ class ClusteerServer
 
                 $value = escapeshellarg($value);
 
-                return "{$key}=\"{$value}\"";
+                return "{$key}={$value}";
             })
             ->filter()
             ->join(' ');
