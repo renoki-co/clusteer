@@ -25,6 +25,7 @@ jobs:
         node:
           - '10'
           - '12'
+          - '14'
         laravel:
           - 7.*
           - 8.*
@@ -49,24 +50,6 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
         coverage: pcov
 
-    - name: Install Chromium binary
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libnss3 chromium-browser
-
-    - name: Test Chromium binary
-      run: |
-        /usr/bin/chromium-browser --version
-
-    - uses: actions/setup-node@v2-beta
-      name: Install Node.js
-      with:
-        node-version: '${{ matrix.node }}'
-
-    - name: Test Node.js binary
-      run: |
-        node -v
-
     - uses: actions/cache@v1
       name: Cache Composer dependencies
       with:
@@ -79,6 +62,18 @@ jobs:
         path: node_modules/
         key: node-js-${{ matrix.node }}-${{ hashFiles('package.json') }}
 
+    - name: Install Chromium binary
+      uses: browser-actions/setup-chrome@latest
+
+    - name: Test Chromium binary
+      run: |
+        $(which chrome) --version
+
+    - uses: actions/setup-node@v2-beta
+      name: Install Node.js
+      with:
+        node-version: '${{ matrix.node }}'
+
     - name: Install dependencies
       run: |
         composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
@@ -88,8 +83,10 @@ jobs:
     - name: Run tests
       run: |
         vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
+      env:
+        CLUSTEER_CHROMIUM_PATH: chromium
 
-    - name: Upload math result for job 1
+    - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
         name: screenshots
