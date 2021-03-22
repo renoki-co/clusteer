@@ -31,10 +31,10 @@ abstract class TestCase extends Orchestra
         $this->server = Process::fromShellCommandline($command)
             ->setTimeout(600);
 
-        $process = $this->server->start();
+        $this->server->start();
 
-        if (! $process->isRunning()) {
-            dd($process->getOutput());
+        if (! $this->server->isRunning()) {
+            dd($this->server->getOutput());
         }
 
         sleep(2);
