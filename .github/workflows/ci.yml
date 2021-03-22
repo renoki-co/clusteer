@@ -68,6 +68,7 @@ jobs:
     - name: Test Chromium binary
       run: |
         $(which chrome) --version
+        export CLUSTEER_CHROMIUM_PATH=$(which chrome)
 
     - uses: actions/setup-node@v2-beta
       name: Install Node.js
@@ -83,8 +84,6 @@ jobs:
     - name: Run tests
       run: |
         vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
-      env:
-        CLUSTEER_CHROMIUM_PATH: chromium
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
