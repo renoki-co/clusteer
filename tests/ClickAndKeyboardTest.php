@@ -7,7 +7,7 @@ use RenokiCo\Clusteer\Clusteer;
 
 class ClickAndKeyboardTest extends TestCase
 {
-    /* public function test_keyboard_type()
+    public function test_keyboard_type()
     {
         $clusteer = Clusteer::to('https://inputtypes.com/')
             ->withHtml()
@@ -73,5 +73,5 @@ class ClickAndKeyboardTest extends TestCase
         $this->assertTrue(
             Str::contains($clusteer->getHtml(), 'mouse-3 clicked')
         );
-    } */
+    }
 }
