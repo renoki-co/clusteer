@@ -33,11 +33,11 @@ abstract class TestCase extends Orchestra
 
         $this->server->start();
 
+        sleep(2);
+
         if (! $this->server->isRunning()) {
             dd($this->server->getOutput());
         }
-
-        sleep(2);
     }
 
     /**
