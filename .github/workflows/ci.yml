@@ -63,12 +63,13 @@ jobs:
         key: node-js-${{ matrix.node }}-${{ hashFiles('package.json') }}
 
     - name: Install Chromium binary
-      uses: browser-actions/setup-chrome@latest
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libnss3 chromium-browser
 
     - name: Test Chromium binary
       run: |
-        $(which chrome) --version
-        export CLUSTEER_CHROMIUM_PATH=$(which chrome)
+        /usr/bin/chromium-browser --version
 
     - uses: actions/setup-node@v2-beta
       name: Install Node.js
