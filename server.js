@@ -7,12 +7,12 @@ const app = express();
 
 const options = {
   port: parseInt(process.env.PORT || 8080),
-  maxConcurrency: parseInt(process.env.MAX_BROWSERS || 1),
-  executablePath: process.env.CHROMIUM_PATH || '/usr/bin/google-chromne-stable',
+  maxConcurrency: parseInt(process.env.MAX_BROWSERS || '1'),
+  executablePath: process.env.CHROMIUM_PATH || '/usr/bin/google-chrome-stable',
   args: process.env.CHROMIUM_ARGS ? process.env.CHROMIUM_ARGS.split(' ') : ['--no-sandbox', '--disable-web-security'],
-  ignoreHTTPSErrors: parseInt(process.env.IGNORE_HTTPS_ERRORS || true),
-  monitor: parseInt(process.env.DEBUG || false),
-  defaultTimeout: parseInt(process.env.DEFAULT_TIMEOUT || 30),
+  ignoreHTTPSErrors: parseInt(process.env.IGNORE_HTTPS_ERRORS || '1'),
+  monitor: parseInt(process.env.DEBUG || '0'),
+  defaultTimeout: parseInt(process.env.DEFAULT_TIMEOUT || '30'),
 };
 
 app.use((err, req, res, next) => {

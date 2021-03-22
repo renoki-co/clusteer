@@ -70,6 +70,10 @@ class ServeClusteer extends Command
         $process = $server->getProcess();
         $loop = $server->getLoop();
 
+        $process->stdout->on('data', function ($chunk) {
+            $this->line($chunk);
+        });
+
         // Process the Supervisor's SIGTERM.
         pcntl_signal(SIGTERM, function () use ($process) {
             foreach ($process->pipes as $pipe) {

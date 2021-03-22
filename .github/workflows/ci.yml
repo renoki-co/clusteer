@@ -14,7 +14,7 @@ jobs:
   build:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     strategy:
       matrix:
@@ -25,6 +25,7 @@ jobs:
         node:
           - '10'
           - '12'
+          - '14'
         laravel:
           - 7.*
           - 8.*
@@ -49,6 +50,18 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
         coverage: pcov
 
+    - uses: actions/cache@v1
+      name: Cache Composer dependencies
+      with:
+        path: ~/.composer/cache/files
+        key: composer-php-${{ matrix.php }}-${{ matrix.laravel }}-${{ matrix.prefer }}-${{ hashFiles('composer.json') }}
+
+    - uses: actions/cache@v1
+      name: Cache Node.js dependencies
+      with:
+        path: node_modules/
+        key: node-js-${{ matrix.node }}-${{ hashFiles('package.json') }}
+
     - name: Install Chromium binary
       run: |
         sudo apt-get update
@@ -63,22 +76,6 @@ jobs:
       with:
         node-version: '${{ matrix.node }}'
 
-    - name: Test Node.js binary
-      run: |
-        node -v
-
-    - uses: actions/cache@v1
-      name: Cache Composer dependencies
-      with:
-        path: ~/.composer/cache/files
-        key: composer-php-${{ matrix.php }}-${{ matrix.laravel }}-${{ matrix.prefer }}-${{ hashFiles('composer.json') }}
-
-    - uses: actions/cache@v1
-      name: Cache Node.js dependencies
-      with:
-        path: node_modules/
-        key: node-js-${{ matrix.node }}-${{ hashFiles('package.json') }}
-
     - name: Install dependencies
       run: |
         composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
@@ -89,7 +86,7 @@ jobs:
       run: |
         vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
 
-    - name: Upload math result for job 1
+    - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
         name: screenshots
