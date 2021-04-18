@@ -6,8 +6,8 @@ LABEL maintainer="Renoki Co. <alex@renoki.org>"
 
 COPY server.js package.json /app/
 
-RUN sudo apt-get update && \
-    sudo apt-get install -y libnss3 chromium-browser && \
+RUN apt-get update && \
+    apt-get install -y libnss3 chromium-browser && \
     cd /app && \
     npm install
 
