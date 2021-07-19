@@ -1,12 +1,10 @@
 {
   "dependencies": {
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "express-healthcheck": "^0.1.0",
     "puppeteer": "^5.5.0",
     "puppeteer-cluster": "^0.22.0",
     "random-user-agent": "^1.0.0"
-  },
-  "devDependencies": {
-    "express": "^4.17.1"
   }
 }
