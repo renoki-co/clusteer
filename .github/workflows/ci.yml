@@ -84,7 +84,7 @@ jobs:
 
     - name: Start webserver
       run: |
-        node tests/fixtures/server.js
+        node tests/fixtures/server.js &
 
     - name: Run tests
       run: |
