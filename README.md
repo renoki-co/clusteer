@@ -9,8 +9,6 @@ Clusteer
 [![Monthly Downloads](https://poser.pugx.org/renoki-co/clusteer/d/monthly)](https://packagist.org/packages/renoki-co/clusteer)
 [![License](https://poser.pugx.org/renoki-co/clusteer/license)](https://packagist.org/packages/renoki-co/clusteer)
 
-[![Plant Tree](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=Plant%20Tree&query=%24.total&url=https%3A%2F%2Fpublic.offset.earth%2Fusers%2Ftreeware%2Ftrees)](https://plant.treeware.earth/renoki-co/clusteer)
-
 Clusteer is a Puppeteer wrapper written for Laravel, but also usable with vanilla PHP, with the super-power of parallelizing pages across multiple browser instances, thanks to [thomasdondorf/puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster).
 
 ## 🤝 Supporting
