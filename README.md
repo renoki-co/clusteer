@@ -9,7 +9,10 @@ Clusteer
 [![Monthly Downloads](https://poser.pugx.org/renoki-co/clusteer/d/monthly)](https://packagist.org/packages/renoki-co/clusteer)
 [![License](https://poser.pugx.org/renoki-co/clusteer/license)](https://packagist.org/packages/renoki-co/clusteer)
 
-Clusteer is a Puppeteer wrapper written for Laravel, but also usable with vanilla PHP, with the super-power of parallelizing pages across multiple browser instances, thanks to [thomasdondorf/puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster).
+Clusteer is a Puppeteer wrapper written for PHP, with the super-power of parallelizing pages across multiple browser instances.
+
+The package leverages [thomasdondorf/puppeteer-cluster](https://github.com/thomasdondorf/puppeteer-cluster), a Node.js module that allows you to build standby Puppeteer browsers that will open up pages,
+making the process of using a browser a blazing-fast experience. ⚡
 
 ## 🤝 Supporting
 
@@ -17,181 +20,9 @@ If you are using your application in your day-to-day job (in production), on pre
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R42U8CL)
 
-## 🚀 Installation
+## 📃 Documentation
 
-You can install the package via composer:
-
-```bash
-composer require renoki-co/clusteer
-```
-
-## 🙌 Usage
-
-```php
-use RenokiCo\Clusteer\Clusteer;
-
-$response = Clusteer::to('https://laravel.com')
-    ->waitUntilAllRequestsFinish()
-    ->withHtml()
-    ->get();
-
-$html = $response->getHtml();
-```
-
-## Benchmarks
-
-You may now ask - is it faster than traditional methods that create one browser for each page?
-
-Benchmarks speak for themselves. Below you will find a benchmark that was made on an app that uses a traditional method like [spatie/browsershot](https://github.com/spatie/browsershot) to analyse links, compared to the one used by Clusteer.
-
-### Browsershot
-
-With Browsershot, the CPU usage skyrockets to 99%. AWS forces autoscaling and gets a total of 6 x `m5.large` instances to 99%. There were analysed 100 links every 1 hour. There are only 3 concurrent jobs that process them in parallel. At the end of the benchmark, the analysis was stopped because the CPU usage couldn't get down from 99%.
-
-![Browsershot](benchmarks/1.png "Browsershot")
-
-### Clusteer
-
-With Clusteer, the CPU keeps below 40%. More than that, it was set up to analyse 1000 links every 1 hour, with 3 max opened browsers on 3 concurrent jobs that process them in parallel. In this case, there were only 4 x `m5.large` instances, and they all keep below 40%.
-
-You can see clearly - fewer servers, fewer CPU usage, more analysed links and there is still plenty of room to compute more than this since there is still gap between hours (from :25 to :55 for example)
-
-The advantage here is that there are 3 opened browsers that wait for tasks, so there are no more start-up delays when opening a new browser - only new incognito pages/tabs are created and destroyed after each request.
-
-![Browsershot](benchmarks/2.png "Browsershot")
-
-## Prerequisites for Server
-
-You will need to have a few node packages installed before diving in.
-
-```bash
-$ npm install --save \
-    dotenv@^8.2.0 \
-    express@^4.17.1 \
-    express-healthcheck@^0.1.0 \
-    puppeteer@^5.5.0 \
-    puppeteer-cluster@^0.22.0 \
-    random-user-agent@^1.0.0
-```
-
-The server relies on Chromium, so you can find some pretty neat and simple way of getting your Chrome binary file, like [staudenmeir/dusk-updater](https://github.com/staudenmeir/dusk-updater).
-
-Once you managed to get a chromium binary, just create the config file:
-
-```bash
-$ php artisan vendor:publish --provider="RenokiCo\Clusteer\ClusteerServiceProvider"
-```
-
-Once ready, you can set up in your env the `CLUSTEER_CHROMIUM_PATH` variable and you should avoid specifying it anywhere because it will become the default binary path.
-
-## Starting the Server
-
-You can get a Puppeteer cluster server with a simple `php artisan clusteer:serve`. The command also supports parameters that makes the cluster launch easier.
-
-To view the whole list of args you can pass and configure the server, run:
-
-```bash
-$ php artisan clusteer:serve --help
-```
-
-## Server on Plain PHP
-
-If you use plain PHP, you can create your script that will run the server with ReactPHP [like in this command file](https://github.com/renoki-co/clusteer/blob/master/src/Console/Commands/ServeClusteer.php#L52-L95)
-
-## Server with Supervisor
-
-It's recommended to run the server with Supervisor. However, make sure that in case of any interruption, the node process may still be running, blocking the allocated port.
-
-In the Supervisor configuration, make sure to add `killasgroup` and `stopasgroup` as described below:
-
-```ini
-[program:clusteer]
-process_name=%(program_name)s_%(process_num)02d
-command=php artisan clusteer:serve
-directory=/path/to/your/project
-autostart=true
-autorestart=true
-killasgroup=true
-stopasgroup=true
-numprocs=1
-redirect_stderr=true
-stdout_logfile=/dev/null
-```
-
-## Client Usage
-
-The client relies on a Clusteer server. You can get it locally by starting the server or having a remote one. Below you will find some examples.
-
-```php
-use RenokiCo\Clusteer\Clusteer;
-
-$clusteer = Clusteer::to('https://example.com')
-    ->setViewport(1280, 720)
-    ->setDevice(Clusteer::MOBILE_DEVICE)
-    ->setExtraHeaders([
-        'My-Header' => 'Value',
-    ])
-    ->blockExtensions(['.css'])
-    ->withHtml()
-    ->get();
-```
-
-By default, Puppeteer tells the browser to not wait for all the requests to be ran. Sometimes, you might want to wait for all of the requests to be ready:
-
-```php
-$clusteer = Clusteer::to('https://example.com')
-    ->waitUntilAllRequestsFinish()
-    ->withHtml()
-    ->get();
-```
-
-Or if you want to see the triggered requests, call `withTriggeredRequests()`:
-
-```php
-$clusteer = Clusteer::to('https://example.com')
-    ->waitUntilAllRequestsFinish()
-    ->withTriggeredRequests()
-    ->get();
-
-$clusteer->getTriggeredRequests();
-```
-
-Or, you can get the attached cookies during the rendering:
-
-```php
-$clusteer = Clusteer::to('https://example.com')
-    ->waitUntilAllRequestsFinish()
-    ->withCookies()
-    ->get();
-
-$clusteer->getCookies();
-```
-
-Debugging the console line can be done with `withConsoleLines()`:
-
-```php
-$clusteer = Clusteer::to('https://example.com')
-    ->waitUntilAllRequestsFinish()
-    ->withConsoleLines()
-    ->get();
-
-$clusteer->getConsoleLines();
-```
-
-To screenshot a page, just call `withScreenshot()`:
-
-```php
-$clusteer = Clusteer::to('https://example.com')
-    ->waitUntilAllRequestsFinish()
-    ->withScreenshot()
-    ->get();
-
-$clusteer->getScreenshot();
-```
-
-The image comes in base64 and gets decoded in the package automatically. If you wish to retrieve it as base64, just call `getScreenshot(false)` instead.
-
-You can also set the quality of the screenshot by calling `withScreenshot($quality)`, where `$quality` is a number between `0` and `100`.
+[The entire documentation is available on Gitbook 🌍](https://rennokki.gitbook.io/clusteer)
 
 ## 🐛 Testing
 
