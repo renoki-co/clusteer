@@ -80,7 +80,11 @@ jobs:
       run: |
         composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
         composer update --${{ matrix.prefer }} --prefer-dist --no-interaction --no-suggest
-        npm install --only=prod
+        npm install
+
+    - name: Start webserver
+      run: |
+        node tests/fixtures/server.js &
 
     - name: Run tests
       run: |

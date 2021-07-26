@@ -9,38 +9,33 @@ class ClickAndKeyboardTest extends TestCase
 {
     public function test_keyboard_type()
     {
-        $clusteer = Clusteer::to('https://inputtypes.com/')
+        $clusteer = Clusteer::to('http://localhost:8000')
             ->withHtml()
-            ->type('this-is-some-test', 'input[type="text"]', 100)
-            ->leftClick('button[type="submit"]')
+            ->type('this-is-some-test', '#typed-text', 100)
             ->wait(2)
             ->get();
 
         $this->assertTrue(
-            Str::contains($clusteer->getHtml(), 'value="this-is-some-test"')
-        );
-
-        $this->assertTrue(
-            Str::contains($clusteer->getHtml(), 'Form submitted!')
+            Str::contains($clusteer->getHtml(), 'Typed text: this-is-some-test')
         );
     }
 
     public function test_keyboard_press()
     {
-        $clusteer = Clusteer::to('https://www.keyboardtester.com/tester.html')
+        $clusteer = Clusteer::to('http://localhost:8000')
             ->withHtml()
             ->press('Alt')
             ->wait(2)
             ->get();
 
         $this->assertTrue(
-            Str::contains($clusteer->getHtml(), 'key_pressed_m">Alt')
+            Str::contains($clusteer->getHtml(), 'Alt pressed: Yes')
         );
     }
 
     public function test_keyboard_press_down_and_up()
     {
-        $clusteer = Clusteer::to('https://www.keyboardtester.com/tester.html')
+        $clusteer = Clusteer::to('http://localhost:8000')
             ->withHtml()
             ->pressDown('Alt')
             ->pressUp('Alt')
@@ -48,30 +43,30 @@ class ClickAndKeyboardTest extends TestCase
             ->get();
 
         $this->assertTrue(
-            Str::contains($clusteer->getHtml(), 'key_pressed_m">Alt')
+            Str::contains($clusteer->getHtml(), 'Alt pressed: Yes')
         );
     }
 
     public function test_clicks()
     {
-        $clusteer = Clusteer::to('https://keyboardtester.co/mouse-click-tester')
+        $clusteer = Clusteer::to('http://localhost:8000')
             ->withHtml()
-            ->leftClick('td[class="mouse-1"]')
-            ->rightClick('td[class="mouse-3"]')
-            ->middleClick('td[class="mouse-2"]')
+            ->leftClick('#button')
+            ->rightClick('#button')
+            ->middleClick('#button')
             ->wait(2)
             ->get();
 
         $this->assertTrue(
-            Str::contains($clusteer->getHtml(), 'mouse-1 clicked')
+            Str::contains($clusteer->getHtml(), 'Right clicked: Yes')
         );
 
         $this->assertTrue(
-            Str::contains($clusteer->getHtml(), 'mouse-2 clicked')
+            Str::contains($clusteer->getHtml(), 'Left clicked: Yes')
         );
 
         $this->assertTrue(
-            Str::contains($clusteer->getHtml(), 'mouse-3 clicked')
+            Str::contains($clusteer->getHtml(), 'Middle clicked: Yes')
         );
     }
 }
