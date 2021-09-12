@@ -14,7 +14,7 @@
     "require": {
         "illuminate/console": "^7.30|^8.23",
         "illuminate/support": "^7.30|^8.23",
-        "react/child-process": "^0.6.1",
+        "react/child-process": "^0.6.3",
         "react/event-loop": "^1.1.1"
     },
     "suggest": {
