@@ -167,6 +167,10 @@ app.use('/healthcheck', require('express-healthcheck')());
       if (action.name === 'wait') {
         await page.waitForTimeout(action.seconds * 1000);
       }
+
+      if (action.name === 'wait-for-selector') {
+        await page.waitForSelector(action.selector, { timeout: action.seconds * 1000 });
+      }
     }, Promise.resolve());
 
 
