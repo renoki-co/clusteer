@@ -36,7 +36,7 @@
     "require-dev": {
         "mockery/mockery": "^1.4",
         "orchestra/testbench": "^5.0|^6.0",
-        "symfony/process": "^5.0"
+        "symfony/process": "^5.3"
     },
     "config": {
         "sort-packages": true
