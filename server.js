@@ -108,6 +108,18 @@ app.use('/healthcheck', require('express-healthcheck')());
         }
       }
 
+      // Allow to block certain resource types.
+      // For example: ?blocked_resource_types=image,media
+      if (query.blocked_resource_types) {
+        console.log(query.blocked_resource_types);
+        const blockedResourceTypes= query.blocked_resource_types
+          .split(',');
+
+        if (blockedResourceTypes.includes(request.resourceType())) {
+          return request.abort();
+        }
+      }
+
       if (query.triggered_requests) {
         triggeredRequests.push({
           type: request.resourceType(),
