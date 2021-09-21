@@ -75,6 +75,25 @@ class CrawlingTest extends TestCase
         }
     }
 
+    public function test_block_resource_types()
+    {
+        $blocked_types = [
+            'image',
+        ];
+
+        $clusteer = Clusteer::to('https://renoki.org')
+            ->blockResourceTypes($blocked_types)
+            ->waitUntilAllRequestsFinish()
+            ->withTriggeredRequests()
+            ->get();
+
+        foreach ($clusteer->getTriggeredRequests() as $request) {
+            $this->assertFalse(
+                (bool) in_array($request['type'], $blocked_types)
+            );
+        }
+    }
+
     public function test_cookies()
     {
         $this->markTestIncomplete(

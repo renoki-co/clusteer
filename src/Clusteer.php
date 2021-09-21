@@ -118,6 +118,17 @@ class Clusteer
     }
 
     /**
+     * Set the resource types to block.
+     *
+     * @param  array  $types
+     * @return $this
+     */
+    public function blockResourceTypes(array $types)
+    {
+        return $this->setParameter('blocked_resource_types', implode(',', $types));
+    }
+
+    /**
      * Set the timeout.
      *
      * @param  int  $seconds
