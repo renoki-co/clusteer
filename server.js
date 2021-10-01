@@ -108,6 +108,16 @@ app.use('/healthcheck', require('express-healthcheck')());
         }
       }
 
+      // Allow to block certain resource types.
+      // For example: ?blocked_resource_types=image,media
+      if (query.blocked_resource_types) {
+        const blockedResourceTypes= query.blocked_resource_types.split(',');
+
+        if (blockedResourceTypes.includes(request.resourceType())) {
+          return request.abort();
+        }
+      }
+
       if (query.triggered_requests) {
         triggeredRequests.push({
           type: request.resourceType(),
@@ -166,6 +176,10 @@ app.use('/healthcheck', require('express-healthcheck')());
 
       if (action.name === 'wait') {
         await page.waitForTimeout(action.seconds * 1000);
+      }
+
+      if (action.name === 'wait-for-selector') {
+        await page.waitForSelector(action.selector, { timeout: action.seconds * 1000 });
       }
     }, Promise.resolve());
 

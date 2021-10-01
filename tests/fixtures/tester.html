@@ -1,0 +1,99 @@
+<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+
+<div id="app">
+  <div>
+    <input
+      id="typed-text"
+      v-model="typedText"
+      type="text"
+    />
+
+    <span id="typed-text">Typed text: {{ typedText }}</span>
+  </div>
+
+  <div>
+    <button
+      id="button"
+      @contextmenu.prevent="rightClicked = true"
+      @click.prevent="leftClicked = true"
+      @mouseDown.middle="middleClicked = true"
+    >
+      Click me with random mouse buttons
+    </button>
+    <button
+      id="button-trigger-selector"
+      @click.prevent="createWaitForTimeoutTrigger"
+    >
+      Click me to start a 5s timeout for the selector <kbd>id="selector"</kbd> to show
+    </button>
+  </div>
+
+  <div>
+    Alt pressed: {{ altPressed ? 'Yes' : 'No' }}
+  </div>
+  <div>
+    Right clicked: {{ rightClicked ? 'Yes' : 'No' }}
+  </div>
+  <div>
+    Left clicked: {{ leftClicked ? 'Yes' : 'No' }}
+  </div>
+  <div>
+    Middle clicked: {{ middleClicked ? 'Yes' : 'No' }}
+  </div>
+
+  <div>
+    Viewport: {{ document.documentElement.clientWidth }}x{{ document.documentElement.clientHeight }}
+  </div>
+  <div>
+    User-Agent: {{ navigator.userAgent }}
+  </div>
+  <div>
+    Cookies enabled: {{ cookiesEnabled() ? 'Yes' : 'No' }}
+  </div>
+  <div v-if="showSelector" id="selector">
+    Selector shown :)
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      altPressed: false,
+      rightClicked: false,
+      leftClicked: false,
+      middleClicked: false,
+      typedText: '',
+      showSelector: false,
+    },
+    created() {
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Alt') {
+          this.altPressed = true;
+        }
+      });
+
+      console.log('Unit Testing: One console line...');
+      console.log('Unit Testing: Another console line...');
+      console.log('Unit Testing: The last console line...');
+    },
+    methods: {
+      cookiesEnabled() {
+        let cookieEnabled = navigator.cookieEnabled;
+
+        if (! cookieEnabled) {
+          document.cookie = "testcookie";
+          cookieEnabled = document.cookie.indexOf("testcookie")!=-1;
+        }
+
+        return cookieEnabled;
+      },
+      createWaitForTimeoutTrigger() {
+        setTimeout(() => {
+          this.showSelector = true;
+        }, 5000);
+      }
+    },
+  });
+</script>

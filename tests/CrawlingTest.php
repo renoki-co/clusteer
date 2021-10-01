@@ -9,17 +9,13 @@ class CrawlingTest extends TestCase
 {
     public function test_viewport()
     {
-        $clusteer = Clusteer::to('https://viewportsizer.com/lite')
+        $clusteer = Clusteer::to('http://localhost:8000')
             ->setViewport(1280, 720)
             ->withHtml()
             ->get();
 
         $this->assertTrue(
-            Str::contains($clusteer->getHtml(), '<span class="height">720</span>')
-        );
-
-        $this->assertTrue(
-            Str::contains($clusteer->getHtml(), '<span class="width">1280</span>')
+            Str::contains($clusteer->getHtml(), '1280x720')
         );
     }
 
@@ -32,19 +28,23 @@ class CrawlingTest extends TestCase
 
     public function test_user_agent()
     {
-        $clusteer = Clusteer::to('https://www.whatismybrowser.com/detect/what-is-my-user-agent')
+        $clusteer = Clusteer::to('http://localhost:8000')
             ->setUserAgent('Some-Kind-Of-User-Agent')
             ->withHtml()
             ->get();
 
         $this->assertTrue(
-            Str::contains($clusteer->getHtml(), 'Some-Kind-Of-User-Agent')
+            Str::contains($clusteer->getHtml(), 'User-Agent: Some-Kind-Of-User-Agent')
         );
     }
 
     public function test_extra_headers()
     {
-        $clusteer = Clusteer::to('https://www.whatismybrowser.com/detect/what-http-headers-is-my-browser-sending')
+        $this->markTestIncomplete(
+            'A way to detect extra headers is needed.'
+        );
+
+        /* $clusteer = Clusteer::to('https://www.whatismybrowser.com/detect/what-http-headers-is-my-browser-sending')
             ->setExtraHeaders([
                 'Some-Kind-Of-Header' => 'Some-Kind-Of-Header-Value',
             ])
@@ -57,39 +57,62 @@ class CrawlingTest extends TestCase
 
         $this->assertTrue(
             Str::contains($clusteer->getHtml(), 'Some-Kind-Of-Header-Value')
-        );
+        ); */
     }
 
     public function test_block_extensions()
     {
-        $clusteer = Clusteer::to('https://renoki.org/')
-            ->blockExtensions(['.js'])
+        $clusteer = Clusteer::to('http://localhost:8000')
+            ->blockExtensions(['.css'])
             ->waitUntilAllRequestsFinish()
             ->withTriggeredRequests()
             ->get();
 
         foreach ($clusteer->getTriggeredRequests() as $request) {
             $this->assertFalse(
-                (bool) preg_match('/\.js$/', $request['url'])
+                (bool) preg_match('/\.css$/', $request['url'])
+            );
+        }
+    }
+
+    public function test_block_resource_types()
+    {
+        $blocked_types = [
+            'image',
+        ];
+
+        $clusteer = Clusteer::to('https://renoki.org')
+            ->blockResourceTypes($blocked_types)
+            ->waitUntilAllRequestsFinish()
+            ->withTriggeredRequests()
+            ->get();
+
+        foreach ($clusteer->getTriggeredRequests() as $request) {
+            $this->assertFalse(
+                (bool) in_array($request['type'], $blocked_types)
             );
         }
     }
 
     public function test_cookies()
     {
-        $clusteer = Clusteer::to('https://www.whatismybrowser.com/detect/are-cookies-enabled?utm_source=whatismybrowsercom&utm_medium=internal&utm_campaign=detect-index')
+        $this->markTestIncomplete(
+            'Cookies are not tested right now.'
+        );
+        /* $clusteer = Clusteer::to('http://localhost:8000')
             ->waitUntilAllRequestsFinish()
             ->withCookies()
+            ->wait(2)
             ->get();
 
         $this->assertTrue(
             count($clusteer->getCookies()) > 0
-        );
+        ); */
     }
 
     public function test_console_lines()
     {
-        $clusteer = Clusteer::to('https://facebook.com')
+        $clusteer = Clusteer::to('http://localhost:8000')
             ->waitUntilAllRequestsFinish()
             ->withConsoleLines()
             ->get();
@@ -111,5 +134,18 @@ class CrawlingTest extends TestCase
         );
 
         file_put_contents('artifacts/test_screenshot.jpeg', $content);
+    }
+
+    public function test_wait_for_selector()
+    {
+        $clusteer = Clusteer::to('http://localhost:8000')
+            ->leftClick('#button-trigger-selector')
+            ->waitForSelector('#selector', 10)
+            ->withHtml()
+            ->get();
+
+        $this->assertTrue(
+            Str::contains($clusteer->getHtml(), 'Selector shown :)')
+        );
     }
 }

@@ -1,7 +1,7 @@
 {
     "name": "renoki-co/clusteer",
-    "description": "Clusteer helps you crawling webpages in a faster way, using a cluster of Chromium browsers under Puppeteer.",
-    "keywords": ["laravel", "php", "chromium", "chrome", "puppeteer", "crawling"],
+    "description": "Clusteer is a Puppeteer wrapper written for PHP, with the super-power of parallelizing pages across multiple browser instances.",
+    "keywords": ["laravel", "php", "chromium", "chrome", "puppeteer", "crawling", "browser"],
     "license": "Apache-2.0",
     "homepage": "https://github.com/renoki-co/clusteer",
     "authors": [
@@ -34,7 +34,6 @@
         "test": "vendor/bin/phpunit"
     },
     "require-dev": {
-        "laravel/legacy-factories": "^1.1",
         "mockery/mockery": "^1.4",
         "orchestra/testbench": "^5.0|^6.0",
         "symfony/process": "^5.0"

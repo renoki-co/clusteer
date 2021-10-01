@@ -22,9 +22,9 @@ jobs:
           - '7.4'
           - '8.0'
         node:
-          - '10'
           - '12'
           - '14'
+          - '16'
         laravel:
           - 7.*
           - 8.*
@@ -49,13 +49,13 @@ jobs:
         extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
         coverage: pcov
 
-    - uses: actions/cache@v2.1.5
+    - uses: actions/cache@v2.1.6
       name: Cache Composer dependencies
       with:
         path: ~/.composer/cache/files
         key: composer-php-${{ matrix.php }}-${{ matrix.laravel }}-${{ matrix.prefer }}-${{ hashFiles('composer.json') }}
 
-    - uses: actions/cache@v2.1.5
+    - uses: actions/cache@v2.1.6
       name: Cache Node.js dependencies
       with:
         path: node_modules/
@@ -70,7 +70,7 @@ jobs:
       run: |
         /usr/bin/chromium-browser --version
 
-    - uses: actions/setup-node@v2.1.5
+    - uses: actions/setup-node@v2.4.1
       name: Install Node.js
       with:
         node-version: '${{ matrix.node }}'
@@ -79,18 +79,22 @@ jobs:
       run: |
         composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
         composer update --${{ matrix.prefer }} --prefer-dist --no-interaction --no-suggest
-        npm install --only=prod
+        npm install
+
+    - name: Start webserver
+      run: |
+        node tests/fixtures/server.js &
 
     - name: Run tests
       run: |
         vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2.2.3
+      uses: actions/upload-artifact@v2.2.4
       with:
         name: screenshots
         path: artifacts/screenshots
 
-    - uses: codecov/codecov-action@v1
+    - uses: codecov/codecov-action@v2.1.0
       with:
         fail_ci_if_error: false
