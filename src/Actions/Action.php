@@ -13,6 +13,7 @@ abstract class Action
      */
     public static function new(): Actionable
     {
+        /** @var Actionable $this */
         return new static(...func_get_args());
     }
 }
