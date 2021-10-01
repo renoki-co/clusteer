@@ -54,6 +54,8 @@ jobs:
         with:
           push: true
           tags: localhost:5000/renokico/clusteer:${{ github.sha }}-${{ matrix.node }}
+          build-args: |
+            VERSION=${{ matrix.node }}
 
       - name: Test
         run: |

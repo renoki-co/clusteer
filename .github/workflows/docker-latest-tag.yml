@@ -56,6 +56,8 @@ jobs:
         with:
           push: true
           tags: localhost:5000/renokico/clusteer:latest-${{ matrix.node }}
+          build-args: |
+            VERSION=${{ matrix.node }}
 
       - name: Test
         run: |
@@ -69,3 +71,5 @@ jobs:
         with:
           push: true
           tags: quay.io/renokico/clusteer:latest-${{ matrix.node }}
+          build-args: |
+            VERSION=${{ matrix.node }}
