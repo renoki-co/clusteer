@@ -20,6 +20,12 @@
     >
       Click me with random mouse buttons
     </button>
+    <button
+      id="button-trigger-selector"
+      @click.prevent="createWaitForTimeoutTrigger"
+    >
+      Click me to start a 5s timeout for the selector <kbd>id="selector"</kbd> to show
+    </button>
   </div>
 
   <div>
@@ -44,6 +50,9 @@
   <div>
     Cookies enabled: {{ cookiesEnabled() ? 'Yes' : 'No' }}
   </div>
+  <div v-if="showSelector" id="selector">
+    Selector shown :)
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
@@ -56,6 +65,7 @@
       leftClicked: false,
       middleClicked: false,
       typedText: '',
+      showSelector: false,
     },
     created() {
       window.addEventListener('keydown', (e) => {
@@ -79,6 +89,11 @@
 
         return cookieEnabled;
       },
+      createWaitForTimeoutTrigger() {
+        setTimeout(() => {
+          this.showSelector = true;
+        }, 5000);
+      }
     },
   });
 </script>
