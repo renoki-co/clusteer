@@ -6,10 +6,15 @@ LABEL maintainer="Renoki Co. <alex@renoki.org>"
 
 COPY server.js package.json /app/
 
-RUN apt-get update && \
-    apt-get install -y libnss3 chromium-browser && \
+RUN apk add --no-cache --update chromium && \
     cd /app && \
-    npm install
+    npm install && \
+    npm install modclean -g && \
+    rm -rf node_modules/*/test/ node_modules/*/tests/ && \
+    npm prune && \
+    modclean -n default:safe --run && \
+    npm uninstall -g modclean && \
+    /usr/bin/chromium-browser --version
 
 WORKDIR /app
 

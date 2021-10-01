@@ -57,9 +57,9 @@ jobs:
 
       - name: Test
         run: |
-          docker run -d -p 8080:8080 -e PROMETHEUS_ENABLED=1 localhost:5000/renokico/clusteer:${{ github.sha }}-${{ matrix.node }}
+          docker run -d -p 8080:8080 localhost:5000/renokico/clusteer:${{ github.sha }}-${{ matrix.node }}
           sleep 5
-          curl --silent -XGET --fail http://127.0.0.1:8080
+          curl --silent -XGET --fail http://127.0.0.1:8080?url=https://example.com&actions=[]&html=1
 
       - name: Build final image
         id: docker_final
