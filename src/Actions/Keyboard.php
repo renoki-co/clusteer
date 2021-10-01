@@ -25,6 +25,7 @@ class Keyboard extends Action implements Actionable
      * Can be 'type', 'down', 'up', 'press'.
      *
      * @var string
+     *
      * @see https://pptr.dev/#?product=Puppeteer&version=v5.3.1&show=api-class-keyboard
      */
     protected $mode = 'type';
