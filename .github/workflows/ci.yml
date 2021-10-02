@@ -19,13 +19,12 @@ jobs:
     strategy:
       matrix:
         php:
-          - '7.3'
           - '7.4'
           - '8.0'
         node:
-          - '10'
           - '12'
           - '14'
+          - '16'
         laravel:
           - 7.*
           - 8.*
@@ -71,7 +70,7 @@ jobs:
       run: |
         /usr/bin/chromium-browser --version
 
-    - uses: actions/setup-node@v2.4.0
+    - uses: actions/setup-node@v2.4.1
       name: Install Node.js
       with:
         node-version: '${{ matrix.node }}'

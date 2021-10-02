@@ -135,4 +135,17 @@ class CrawlingTest extends TestCase
 
         file_put_contents('artifacts/test_screenshot.jpeg', $content);
     }
+
+    public function test_wait_for_selector()
+    {
+        $clusteer = Clusteer::to('http://localhost:8000')
+            ->leftClick('#button-trigger-selector')
+            ->waitForSelector('#selector', 10)
+            ->withHtml()
+            ->get();
+
+        $this->assertTrue(
+            Str::contains($clusteer->getHtml(), 'Selector shown :)')
+        );
+    }
 }

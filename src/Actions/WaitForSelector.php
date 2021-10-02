@@ -2,26 +2,27 @@
 
 namespace RenokiCo\Clusteer\Actions;
 
-use RenokiCo\Clusteer\Contracts\Actionable;
-
-class Wait extends Action implements Actionable
+class WaitForSelector extends Wait
 {
     /**
-     * The amount of seconds to wait.
+     * The selector to wait for.
      *
-     * @var int
+     * @var string
      */
-    protected $seconds;
+    protected $selector;
 
     /**
      * Initialize the action.
      *
+     * @param  string  $selector
      * @param  int  $seconds
      * @return void
      */
-    public function __construct(int $seconds)
+    public function __construct(string $selector, int $seconds)
     {
-        $this->seconds = $seconds;
+        parent::__construct($seconds);
+
+        $this->selector = $selector;
     }
 
     /**
@@ -33,7 +34,8 @@ class Wait extends Action implements Actionable
     public function format(): array
     {
         return [
-            'name' => 'wait',
+            'name' => 'wait-for-selector',
+            'selector' => $this->selector,
             'seconds' => $this->seconds,
         ];
     }
