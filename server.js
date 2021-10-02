@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const { Cluster } = require('puppeteer-cluster');
 const randomUserAgent = require('random-user-agent');
+const v8 = require('v8');
 const app = express();
 
 const options = {
@@ -20,6 +21,24 @@ app.use((err, req, res, next) => {
 });
 
 app.use('/healthcheck', require('express-healthcheck')());
+
+app.use('/usage', (req, res) => {
+  let { rss, heapTotal, external, arrayBuffers } = process.memoryUsage();
+
+  let totalSize = v8.getHeapStatistics().total_available_size;
+  let usedSize = rss + heapTotal + external + arrayBuffers;
+  let freeSize = totalSize - usedSize;
+  let percentUsage = (usedSize / totalSize) * 100;
+
+  return res.json({
+    memory: {
+      free: freeSize,
+      used: usedSize,
+      total: totalSize,
+      percent: percentUsage,
+    },
+  });
+});
 
 (async () => {
   const cluster = await Cluster.launch({
