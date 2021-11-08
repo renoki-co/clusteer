@@ -33,7 +33,7 @@ jobs:
     name: Test & Tag Latest (node:${{ matrix.node }})
 
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
