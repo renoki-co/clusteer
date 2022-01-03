@@ -70,7 +70,7 @@ jobs:
       run: |
         /usr/bin/chromium-browser --version
 
-    - uses: actions/setup-node@v2.5.0
+    - uses: actions/setup-node@v2.5.1
       name: Install Node.js
       with:
         node-version: '${{ matrix.node }}'
