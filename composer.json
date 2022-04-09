@@ -23,7 +23,7 @@
         "illuminate/console": "^8.83|^9.0.1",
         "illuminate/support": "^8.83|^9.0.1",
         "react/child-process": "^0.6.1",
-        "react/event-loop": "^1.1.1"
+        "react/event-loop": "^1.3.0"
     },
     "suggest": {
         "ext-pcntl": "Running the Clusteer Server needs pcntl to listen to command signals."
