@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "dotenv": "^8.2.0",
+    "dotenv": "^16.3.1",
     "express": "^4.17.2",
     "express-healthcheck": "^0.1.0",
     "puppeteer": "^5.5.0",
