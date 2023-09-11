@@ -91,7 +91,7 @@ jobs:
         vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3.1.3
       with:
         name: screenshots
         path: artifacts/screenshots
