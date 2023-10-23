@@ -41,7 +41,7 @@ jobs:
     name: PHP ${{ matrix.php }} - Node ${{ matrix.node }} - Laravel ${{ matrix.laravel }} --${{ matrix.prefer }}
 
     steps:
-    - uses: actions/checkout@v3.0.2
+    - uses: actions/checkout@v4.1.1
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
